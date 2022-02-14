@@ -17,24 +17,25 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     var started = false
     
     @IBAction func startTapped(_ sender: UIButton) {
-        sender.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: [.allowUserInteraction], animations: {
-            sender.transform = CGAffineTransform.identity
-        }, completion: nil)
+        UIView.animate(withDuration: 0.2) {
+            sender.transform = CGAffineTransform(scaleX: 3, y: 3)
+            sender.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }
+        
         
         registerLocal()
         if !started && granted {
             scheduleLocal()
-            changeButtonState(true)
+            changeButtonState(started)
         } else {
             cancelSchedule()
-            changeButtonState(false)
+            changeButtonState(started)
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        changeButtonState(false)
+        changeButtonState(started)
     }
 
     func changeButtonState(_ condition: Bool) {
@@ -108,7 +109,8 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             
             switch response.actionIdentifier {
             case UNNotificationDefaultActionIdentifier:
-                changeButtonState(false)
+                started = false
+                changeButtonState(started)
                 print("Default identifier")
             case "show":
                 print("Show more")
