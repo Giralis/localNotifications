@@ -8,6 +8,7 @@
 import UserNotifications
 import UIKit
 
+
 class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 
     @IBOutlet var button: UIButton!
@@ -16,6 +17,11 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     var started = false
     
     @IBAction func startTapped(_ sender: UIButton) {
+        sender.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: [.allowUserInteraction], animations: {
+            sender.transform = CGAffineTransform.identity
+        }, completion: nil)
+        
         registerLocal()
         if !started && granted {
             scheduleLocal()
@@ -72,8 +78,8 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         var dateComponents = DateComponents()
         dateComponents.hour = 11
         dateComponents.minute = 47
-        //let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 6, repeats: false)
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3600, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         center.add(request)
     }
@@ -102,6 +108,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             
             switch response.actionIdentifier {
             case UNNotificationDefaultActionIdentifier:
+                changeButtonState(false)
                 print("Default identifier")
             case "show":
                 print("Show more")
